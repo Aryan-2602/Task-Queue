@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package job_scheduler;
+
+service JobSchedulerService {
+    rpc SubmitJob(SubmitJobRequest) returns (SubmitJobResponse);
+    rpc GetJobStatus(GetJobStatusRequest) returns (GetJobStatusResponse);
+    rpc ListJobs(ListJobsRequest) returns (ListJobsResponse);
+}
+
+message SubmitJobRequest {
+    string job_id = 1;
+    string job_type = 2;
+    string payload = 3;
+    int32 priority = 4;
+    int32 max_retries = 5;
+    int32 timeout_seconds = 6;
+}
+
+message SubmitJobResponse {
+    bool success = 1;
+    string message = 2;
+    string job_id = 3;
+}
+
+message GetJobStatusRequest {
+    string job_id = 1;
+}
+
+message GetJobStatusResponse {
+    string job_id = 1;
+    string status = 2;
+    string result = 3;
+    string error_message = 4;
+    int64 created_at = 5;
+    int64 started_at = 6;
+    int64 completed_at = 7;
+    int32 retry_count = 8;
+}
+
+message ListJobsRequest {
+    string status_filter = 1;
+    int32 limit = 2;
+    int32 offset = 3;
+}
+
+message ListJobsResponse {
+    repeated GetJobStatusResponse jobs = 1;
+    int32 total_count = 2;
+}
